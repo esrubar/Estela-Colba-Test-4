@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Estela_Colba_Test_4.Controllers;
 
+[ApiController]
+[Route ("[controller]")]
 public class MemesController: ControllerBase
 {
     [HttpGet("{name}")]

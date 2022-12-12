@@ -47,6 +47,8 @@ public class ThumbnailsController: ControllerBase
             {
                 return NotFound();
             }
+            thumbnail.Visits += 1;
+            db.SaveChanges();
             return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
         }
     }
@@ -110,10 +112,22 @@ public class ThumbnailsController: ControllerBase
             return searchByNamePaginationResponse;
 
         }
-        
 
-    } 
+    }
 
-
+    [HttpGet("mostViewed")]
+    public IActionResult GetMostViewed()
+    {
+        using (var db = new ThumbnailsContext())
+        {
+            var thumbnail = db.Thumbnails.OrderByDescending(t => t.Visits).FirstOrDefault();
+            if (thumbnail is null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        }
+    }
+    
     
 }
