@@ -40,26 +40,23 @@ public class ThumbnailsController: ControllerBase
     [HttpGet("{id:guid}")]
     public IActionResult GetById([FromRoute] Guid id)
     {
-        Thumbnail thumbnail;
         using (var db = new ThumbnailsContext())
         {
-            thumbnail = db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
+           var  thumbnail = db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
             if (thumbnail is null)
             {
                 return NotFound();
             }
+            return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
         }
-        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
-        
     }
 
     [HttpPut("{id:guid}")]
     public IActionResult Update([FromRoute] Guid id, [FromQuery] Thumbnail updatedThumbnail)
     {
-        Thumbnail thumbnail;
         using (var db = new ThumbnailsContext())
         {
-            thumbnail = db.Thumbnails.FirstOrDefault(t => t.Id == id);
+            var thumbnail = db.Thumbnails.FirstOrDefault(t => t.Id == id);
             if (thumbnail is null)
             {
                 return NotFound();
@@ -67,8 +64,9 @@ public class ThumbnailsController: ControllerBase
 
             thumbnail = updatedThumbnail;
             db.SaveChanges();
+            return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+
         }
-        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
     }
 
     [HttpDelete("{id:guid}")]
@@ -83,14 +81,14 @@ public class ThumbnailsController: ControllerBase
             }
             db.Remove(thumbnail);
             db.SaveChanges();
+            return NoContent();
+
         }
-        return NoContent();
     }
 
     [HttpGet("search")]
     public SearchByNamePaginationResponse SearchByName([FromQuery]SearchByNameFilter filter)
     {
-        SearchByNamePaginationResponse searchByNamePaginationResponse;
         using (var db = new ThumbnailsContext())
         {
             var elementsInPage = new List<Thumbnail>();
@@ -107,11 +105,12 @@ public class ThumbnailsController: ControllerBase
             var total = (double)thumbnails.Count / filter.ElementsInPageCount;
             var totalPages = (int)Math.Ceiling(total);
 
-            searchByNamePaginationResponse =
+            var searchByNamePaginationResponse =
                 new SearchByNamePaginationResponse(filter.Page, totalPages, filter.ElementsInPageCount, elementsInPage);
+            return searchByNamePaginationResponse;
 
         }
-        return searchByNamePaginationResponse;
+        
 
     } 
 
