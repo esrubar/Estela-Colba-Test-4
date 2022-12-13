@@ -11,62 +11,45 @@ namespace Estela_Colba_Test_4.Controllers;
 public class ThumbnailsController: ControllerBase
 {
     //private static readonly List<Thumbnail> _thumbnails = ThumbnailsData.Thumbnails;
-    private int InitialVisits = 0;
+    private ThumbnailRepository _thumbnailRepository;
+
+    public ThumbnailsController(ThumbnailRepository thumbnailRepository)
+    {
+        _thumbnailRepository = thumbnailRepository;
+    }
 
     [HttpGet]
     public List<Thumbnail> GetAll()
     {
-        using (var db = new ThumbnailsContext())
-        {
-            return db.Thumbnails.ToList();
-        }
-        
+        var thumbnails = _thumbnailRepository.GetAllAsync();
+        return thumbnails;
     }
 
     [HttpPost]
     public Thumbnail Create([FromBody] Thumbnail thumbnail)
     {
-        using (var db = new ThumbnailsContext())
-        {
-            thumbnail.Id = Guid.NewGuid();
-            thumbnail.Visits = InitialVisits;
-
-            db.Thumbnails.Add(thumbnail);
-            db.SaveChanges();
-        }
-        return thumbnail;
+        return _thumbnailRepository.CreateThumbnail(thumbnail);
+        
     }
     
     [HttpGet("{id:guid}")]
     public IActionResult GetById([FromRoute] Guid id)
     {
-        Thumbnail thumbnail;
-        using (var db = new ThumbnailsContext())
+        var thumbnail = _thumbnailRepository.GetById(id);
+        if (thumbnail is null)
         {
-            thumbnail = db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
-            if (thumbnail is null)
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
         return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
-        
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult Update([FromRoute] Guid id, [FromQuery] Thumbnail updatedThumbnail)
+    public IActionResult Update([FromRoute] Guid id, [FromQuery] Thumbnail newThumbnail)
     {
-        Thumbnail thumbnail;
-        using (var db = new ThumbnailsContext())
+        var thumbnail = _thumbnailRepository.UpdateThumbnail(id, newThumbnail);
+        if (thumbnail is null)
         {
-            thumbnail = db.Thumbnails.FirstOrDefault(t => t.Id == id);
-            if (thumbnail is null)
-            {
-                return NotFound();
-            }
-
-            thumbnail = updatedThumbnail;
-            db.SaveChanges();
+            return NotFound();
         }
         return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
     }
@@ -74,15 +57,11 @@ public class ThumbnailsController: ControllerBase
     [HttpDelete("{id:guid}")]
     public IActionResult Delete([FromRoute] Guid id)
     {
-        using (var db = new ThumbnailsContext())
+        //using var db = new ThumbnailsContext();
+        var thumbnail = _thumbnailRepository.DeleteThumbnail(id);
+        if (thumbnail is null)
         {
-            var thumbnail = db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
-            if (thumbnail is null)
-            {
-                return NotFound();
-            }
-            db.Remove(thumbnail);
-            db.SaveChanges();
+            return NotFound();
         }
         return NoContent();
     }
@@ -90,31 +69,19 @@ public class ThumbnailsController: ControllerBase
     [HttpGet("search")]
     public SearchByNamePaginationResponse SearchByName([FromQuery]SearchByNameFilter filter)
     {
-        SearchByNamePaginationResponse searchByNamePaginationResponse;
-        using (var db = new ThumbnailsContext())
+        return _thumbnailRepository.SearchByName(filter);
+    }
+
+    [HttpGet("mostViewed")]
+    public IActionResult GetMostViewed()
+    {
+        var thumbnail = _thumbnailRepository.GetMostViewed();
+        if (thumbnail is null)
         {
-            var elementsInPage = new List<Thumbnail>();
-    
-            var thumbnails = db.Thumbnails.
-                    Where(t => t.Name.ToLower().Contains(filter.Name.ToLower()) 
-                    && t.Description.ToLower().Contains(filter.Description.ToLower())).ToList();
-
-            for (var i = 0; i <= filter.ElementsInPageCount - 1; i++)
-            {
-                var element = thumbnails.ElementAtOrDefault(filter.ElementsInPageCount * (filter.Page - 1) + i);
-                if (element != null) elementsInPage.Add(element); }
-         
-            var total = (double)thumbnails.Count / filter.ElementsInPageCount;
-            var totalPages = (int)Math.Ceiling(total);
-
-            searchByNamePaginationResponse =
-                new SearchByNamePaginationResponse(filter.Page, totalPages, filter.ElementsInPageCount, elementsInPage);
-
+            return NotFound();
         }
-        return searchByNamePaginationResponse;
-
-    } 
-
-
+        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+    }
+    
     
 }
