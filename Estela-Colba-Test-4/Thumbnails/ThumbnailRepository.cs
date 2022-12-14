@@ -1,33 +1,42 @@
-using Microsoft.AspNetCore.Mvc;
+using Estela_Colba_Test_4.Pagination;
+using Estela_Colba_Test_4.Thumbnails.Models;
 
-namespace Estela_Colba_Test_4.Models;
+namespace Estela_Colba_Test_4.Thumbnails;
 
-public class ThumbnailRepository: IThumbnailRepository
+public class ThumbnailRepository : IThumbnailRepository
 {
     private readonly ThumbnailsContext _db;
-    private readonly IThumbnailRepository _thumbnailRepository;
+    //private readonly IThumbnailRepository _thumbnailRepository;
     private const int InitialVisits = 0;
 
 
-    public ThumbnailRepository(ThumbnailsContext db, IThumbnailRepository thumbnailRepository)
+    public ThumbnailRepository(ThumbnailsContext db)
     {
         _db = db;
-        _thumbnailRepository = thumbnailRepository;
+        //_thumbnailRepository = thumbnailRepository;
     }
 
-   public List<Thumbnail> GetAllAsync()
+   public async Task<List<Thumbnail>> GetAllAsync()
     {
         //using var db = new ThumbnailsContext();
-        var thumbnails = _db.Thumbnails.ToList();
+        var thumbnails = await Task.Run(() => _db.Thumbnails.ToList());
         return thumbnails;
-
     }
 
-   public Thumbnail CreateThumbnail(Thumbnail thumbnail)
+   public Thumbnail CreateThumbnail(CreateThumbnailResponse createThumbnailResponse)
    {
        //using var db = new ThumbnailsContext();
-       thumbnail.Id = Guid.NewGuid();
-       thumbnail.Visits = InitialVisits;
+       var thumbnail = new Thumbnail
+       {
+           Id = Guid.NewGuid(),
+           Visits = InitialVisits,
+           Name = createThumbnailResponse.Name,
+           Description = createThumbnailResponse.Description,
+           Width = createThumbnailResponse.Width,
+           Height = createThumbnailResponse.Height,
+           OriginalRoute = createThumbnailResponse.OriginalRoute,
+           ThumbnailRoute = createThumbnailResponse.ThumbnailRoute
+       };
 
        _db.Thumbnails.Add(thumbnail);
        _db.SaveChanges();
@@ -47,18 +56,18 @@ public class ThumbnailRepository: IThumbnailRepository
    }
 
 
-   public Thumbnail? UpdateThumbnail(Guid id, Thumbnail newThumbnail)
+   public Thumbnail? UpdateThumbnail(Guid id, CreateThumbnailResponse createThumbnailResponse)
    {
        //using var db = new ThumbnailsContext();
        var thumbnail = GetById(id);
        if (thumbnail is not null)
        {
-           thumbnail.Name = newThumbnail.Name;    
-           thumbnail.Description = newThumbnail.Description;  
-           thumbnail.Width = newThumbnail.Width;
-           thumbnail.Height = newThumbnail.Height;
-           thumbnail.OriginalRoute = newThumbnail.OriginalRoute;
-           thumbnail.ThumbnailRoute = newThumbnail.ThumbnailRoute; 
+           thumbnail.Name = createThumbnailResponse.Name;    
+           thumbnail.Description = createThumbnailResponse.Description;  
+           thumbnail.Width = createThumbnailResponse.Width;
+           thumbnail.Height = createThumbnailResponse.Height;
+           thumbnail.OriginalRoute = createThumbnailResponse.OriginalRoute;
+           thumbnail.ThumbnailRoute = createThumbnailResponse.ThumbnailRoute; 
            _db.SaveChanges();
        }
        return thumbnail;

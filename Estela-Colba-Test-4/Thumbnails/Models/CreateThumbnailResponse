@@ -1,0 +1,6 @@
+namespace Estela_Colba_Test_4.Models;
+
+public class CreateThumbnailResponse
+{
+    
+}

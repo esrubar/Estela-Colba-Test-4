@@ -1,4 +1,6 @@
-namespace Estela_Colba_Test_4.Models;
+using Estela_Colba_Test_4.Thumbnails.Models;
+
+namespace Estela_Colba_Test_4.Pagination;
 
 
 public class SearchByNamePaginationResponse

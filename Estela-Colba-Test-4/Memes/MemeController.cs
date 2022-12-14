@@ -1,7 +1,7 @@
-using Estela_Colba_Test_4.Models;
+using Estela_Colba_Test_4.Thumbnails;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Estela_Colba_Test_4.Controllers;
+namespace Estela_Colba_Test_4.Memes;
 
 [ApiController]
 [Route ("[controller]")]

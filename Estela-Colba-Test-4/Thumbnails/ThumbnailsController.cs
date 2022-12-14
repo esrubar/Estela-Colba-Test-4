@@ -1,9 +1,8 @@
-using Estela_Colba_Test_4.Models;
+using Estela_Colba_Test_4.Pagination;
+using Estela_Colba_Test_4.Thumbnails.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 
-namespace Estela_Colba_Test_4.Controllers;
+namespace Estela_Colba_Test_4.Thumbnails;
 
 
 [ApiController]
@@ -11,42 +10,43 @@ namespace Estela_Colba_Test_4.Controllers;
 public class ThumbnailsController: ControllerBase
 {
     //private static readonly List<Thumbnail> _thumbnails = ThumbnailsData.Thumbnails;
-    private ThumbnailRepository _thumbnailRepository;
+    private IThumbnailRepository _thumbnailRepository;
 
-    public ThumbnailsController(ThumbnailRepository thumbnailRepository)
+    public ThumbnailsController(IThumbnailRepository thumbnailRepository)
     {
         _thumbnailRepository = thumbnailRepository;
     }
 
     [HttpGet]
-    public List<Thumbnail> GetAll()
+    public async Task<List<Thumbnail>> GetAll()
     {
-        var thumbnails = _thumbnailRepository.GetAllAsync();
+        var thumbnails = await _thumbnailRepository.GetAllAsync();
         return thumbnails;
     }
 
     [HttpPost]
-    public Thumbnail Create([FromBody] Thumbnail thumbnail)
+    public Thumbnail Create([FromBody] CreateThumbnailResponse createThumbnailResponse)
     {
-        return _thumbnailRepository.CreateThumbnail(thumbnail);
+        return _thumbnailRepository.CreateThumbnail(createThumbnailResponse);
         
     }
     
     [HttpGet("{id:guid}")]
-    public IActionResult GetById([FromRoute] Guid id)
+    public ActionResult<Thumbnail> GetById([FromRoute] Guid id)
     {
         var thumbnail = _thumbnailRepository.GetById(id);
         if (thumbnail is null)
         {
             return NotFound();
         }
-        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        //return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        return Ok(thumbnail);
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult Update([FromRoute] Guid id, [FromQuery] Thumbnail newThumbnail)
+    public IActionResult Update([FromRoute] Guid id, [FromBody] CreateThumbnailResponse createThumbnailResponse)
     {
-        var thumbnail = _thumbnailRepository.UpdateThumbnail(id, newThumbnail);
+        var thumbnail = _thumbnailRepository.UpdateThumbnail(id, createThumbnailResponse);
         if (thumbnail is null)
         {
             return NotFound();

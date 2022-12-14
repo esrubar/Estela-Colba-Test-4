@@ -16,4 +16,32 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Models\CreateThumbnailRequest.cs" />
+      <Compile Remove="Controllers\WeatherForecastController.cs" />
+      <Compile Remove="WeatherForecast.cs" />
+      <Compile Remove="Controllers\**" />
+      <Compile Remove="NewDirectory1\**" />
+      <Compile Remove="Models\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Controllers\**" />
+      <EmbeddedResource Remove="NewDirectory1\**" />
+      <EmbeddedResource Remove="Models\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Controllers\**" />
+      <None Remove="NewDirectory1\**" />
+      <None Remove="Models\**" />
+      <None Remove="Thumbnails\Models\CreateThumbnailResponse" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Controllers\**" />
+      <Content Remove="NewDirectory1\**" />
+      <Content Remove="Models\**" />
+    </ItemGroup>
+
 </Project>

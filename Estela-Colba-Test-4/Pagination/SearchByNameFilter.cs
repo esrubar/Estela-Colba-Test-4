@@ -1,4 +1,4 @@
-namespace Estela_Colba_Test_4.Models;
+namespace Estela_Colba_Test_4.Pagination;
 
 public class SearchByNameFilter
 {
