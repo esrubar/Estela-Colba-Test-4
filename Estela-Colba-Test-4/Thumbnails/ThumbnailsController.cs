@@ -25,16 +25,16 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpPost]
-    public Thumbnail Create([FromBody] CreateThumbnailResponse createThumbnailResponse)
+    public async Task<Thumbnail> Create([FromBody] CreateThumbnailResponse createThumbnailResponse)
     {
-        return _thumbnailRepository.CreateThumbnail(createThumbnailResponse);
+        return await _thumbnailRepository.CreateThumbnail(createThumbnailResponse);
         
     }
     
     [HttpGet("{id:guid}")]
-    public ActionResult<Thumbnail> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<Thumbnail>> GetById([FromRoute] Guid id)
     {
-        var thumbnail = _thumbnailRepository.GetById(id);
+        var thumbnail = await _thumbnailRepository.GetById(id);
         if (thumbnail is null)
         {
             return NotFound();
@@ -44,9 +44,9 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult Update([FromRoute] Guid id, [FromBody] CreateThumbnailResponse createThumbnailResponse)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CreateThumbnailResponse createThumbnailResponse)
     {
-        var thumbnail = _thumbnailRepository.UpdateThumbnail(id, createThumbnailResponse);
+        var thumbnail = await _thumbnailRepository.UpdateThumbnail(id, createThumbnailResponse);
         if (thumbnail is null)
         {
             return NotFound();
@@ -55,10 +55,10 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public IActionResult Delete([FromRoute] Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         //using var db = new ThumbnailsContext();
-        var thumbnail = _thumbnailRepository.DeleteThumbnail(id);
+        var thumbnail = await _thumbnailRepository.DeleteThumbnail(id);
         if (thumbnail is null)
         {
             return NotFound();
@@ -67,15 +67,15 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpGet("search")]
-    public SearchByNamePaginationResponse SearchByName([FromQuery]SearchByNameFilter filter)
+    public async Task<SearchByNamePaginationResponse> SearchByName([FromQuery]SearchByNameFilter filter)
     {
-        return _thumbnailRepository.SearchByName(filter);
+        return await _thumbnailRepository.SearchByName(filter);
     }
 
     [HttpGet("mostViewed")]
-    public IActionResult GetMostViewed()
+    public async Task<IActionResult> GetMostViewed()
     {
-        var thumbnail = _thumbnailRepository.GetMostViewed();
+        var thumbnail = await _thumbnailRepository.GetMostViewed();
         if (thumbnail is null)
         {
             return NotFound();

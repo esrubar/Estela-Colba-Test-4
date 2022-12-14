@@ -23,7 +23,7 @@ public class ThumbnailRepository : IThumbnailRepository
         return thumbnails;
     }
 
-   public Thumbnail CreateThumbnail(CreateThumbnailResponse createThumbnailResponse)
+   public async Task<Thumbnail> CreateThumbnail(CreateThumbnailResponse createThumbnailResponse)
    {
        //using var db = new ThumbnailsContext();
        var thumbnail = new Thumbnail
@@ -37,29 +37,30 @@ public class ThumbnailRepository : IThumbnailRepository
            OriginalRoute = createThumbnailResponse.OriginalRoute,
            ThumbnailRoute = createThumbnailResponse.ThumbnailRoute
        };
-
-       _db.Thumbnails.Add(thumbnail);
-       _db.SaveChanges();
+        
+       await Task.Run(() => _db.Thumbnails.Add(thumbnail));
+       await _db.SaveChangesAsync();
        return thumbnail;
    }
 
-   public Thumbnail? GetById(Guid id)
+   public async Task<Thumbnail?> GetById(Guid id)
    {
        //using var db = new ThumbnailsContext();
-       var thumbnail = _db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
+       var thumbnail = await Task.Run(() => _db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id));
+       //var thumbnail = _db.Thumbnails.FirstOrDefault(thumbnail => thumbnail.Id == id);
        if (thumbnail is not null)
        {
            thumbnail.Visits += 1;
        }
-       _db.SaveChanges();
+       await _db.SaveChangesAsync();
        return thumbnail;
    }
 
 
-   public Thumbnail? UpdateThumbnail(Guid id, CreateThumbnailResponse createThumbnailResponse)
+   public async Task<Thumbnail?> UpdateThumbnail(Guid id, CreateThumbnailResponse createThumbnailResponse)
    {
        //using var db = new ThumbnailsContext();
-       var thumbnail = GetById(id);
+       var thumbnail = await GetById(id);
        if (thumbnail is not null)
        {
            thumbnail.Name = createThumbnailResponse.Name;    
@@ -68,35 +69,41 @@ public class ThumbnailRepository : IThumbnailRepository
            thumbnail.Height = createThumbnailResponse.Height;
            thumbnail.OriginalRoute = createThumbnailResponse.OriginalRoute;
            thumbnail.ThumbnailRoute = createThumbnailResponse.ThumbnailRoute; 
-           _db.SaveChanges();
+           await _db.SaveChangesAsync();
        }
        return thumbnail;
    }
 
-   public Thumbnail? DeleteThumbnail(Guid id)
+   public async Task<Thumbnail?> DeleteThumbnail(Guid id)
    {
-       var thumbnail = GetById(id);
+       var thumbnail = await GetById(id);
        if (thumbnail is not null)
        {
            _db.Remove(thumbnail);
-           _db.SaveChanges();
+           await _db.SaveChangesAsync();
        }
        return thumbnail;
    }
 
-   public Thumbnail? GetMostViewed()
+   public async Task<Thumbnail?> GetMostViewed()
    {
        //using var db = new ThumbnailsContext();
-       return _db.Thumbnails.OrderByDescending(t => t.Visits).FirstOrDefault();
+       //return _db.Thumbnails.OrderByDescending(t => t.Visits).FirstOrDefault();
+       var thumbnail = await Task.Run(() => _db.Thumbnails.OrderByDescending(t => t.Visits).FirstOrDefault());
+       return thumbnail;
    }
 
-   public SearchByNamePaginationResponse SearchByName(SearchByNameFilter filter)
+   public async Task<SearchByNamePaginationResponse> SearchByName(SearchByNameFilter filter)
    {
        var elementsInPage = new List<Thumbnail>();
-       var thumbnails = _db.Thumbnails.Local
-           .Where(t => t.Name.ToLower().Contains(filter.Name.ToLower()) 
-                       && t.Description.ToLower().Contains(filter.Description.ToLower())).ToList();
-       
+      // var thumbnails = _db.Thumbnails
+      //     .Where(t => t.Name.ToLower().Contains(filter.Name.ToLower()) 
+      //                 && t.Description.ToLower().Contains(filter.Description.ToLower())).ToList();
+      
+      var thumbnails = await Task.Run(() => _db.Thumbnails
+          .Where(t => t.Name.ToLower().Contains(filter.Name.ToLower()) 
+                      && t.Description.ToLower().Contains(filter.Description.ToLower())).ToList());
+
        for (var i = 0; i <= filter.ElementsInPageCount - 1; i++)
        {
            var element = thumbnails.ElementAtOrDefault(filter.ElementsInPageCount * (filter.Page - 1) + i);
