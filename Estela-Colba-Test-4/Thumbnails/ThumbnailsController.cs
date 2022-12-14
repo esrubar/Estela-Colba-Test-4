@@ -10,11 +10,13 @@ namespace Estela_Colba_Test_4.Thumbnails;
 public class ThumbnailsController: ControllerBase
 {
     //private static readonly List<Thumbnail> _thumbnails = ThumbnailsData.Thumbnails;
-    private IThumbnailRepository _thumbnailRepository;
+    private readonly IThumbnailRepository _thumbnailRepository;
+    private readonly ILogger<ThumbnailsController> _logger;
 
-    public ThumbnailsController(IThumbnailRepository thumbnailRepository)
+    public ThumbnailsController(IThumbnailRepository thumbnailRepository, ILogger<ThumbnailsController> logger)
     {
         _thumbnailRepository = thumbnailRepository;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -37,6 +39,7 @@ public class ThumbnailsController: ControllerBase
         var thumbnail = await _thumbnailRepository.GetById(id);
         if (thumbnail is null)
         {
+            _logger.LogWarning($"Not found {id}");
             return NotFound();
         }
         //return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
@@ -49,6 +52,7 @@ public class ThumbnailsController: ControllerBase
         var thumbnail = await _thumbnailRepository.UpdateThumbnail(id, createThumbnailResponse);
         if (thumbnail is null)
         {
+            _logger.LogWarning($"Not found {id}");
             return NotFound();
         }
         return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
@@ -61,6 +65,7 @@ public class ThumbnailsController: ControllerBase
         var thumbnail = await _thumbnailRepository.DeleteThumbnail(id);
         if (thumbnail is null)
         {
+            _logger.LogWarning($"Not found {id}");
             return NotFound();
         }
         return NoContent();
@@ -78,6 +83,7 @@ public class ThumbnailsController: ControllerBase
         var thumbnail = await _thumbnailRepository.GetMostViewed();
         if (thumbnail is null)
         {
+            _logger.LogWarning($"Could not find the thumbnail with the most views");
             return NotFound();
         }
         return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
