@@ -22,19 +22,19 @@ public class ThumbnailRepository : IThumbnailRepository
         return await _db.Thumbnails.ToListAsync();
     }
 
-   public async Task<Thumbnail> CreateThumbnail(CreateThumbnailResponse createThumbnailResponse)
+   public async Task<Thumbnail> CreateThumbnail(CreateThumbnailRequest createThumbnailRequest)
    {
        //using var db = new ThumbnailsContext();
        var thumbnail = new Thumbnail
        {
            Id = Guid.NewGuid(),
            Visits = InitialVisits,
-           Name = createThumbnailResponse.Name,
-           Description = createThumbnailResponse.Description,
-           Width = createThumbnailResponse.Width,
-           Height = createThumbnailResponse.Height,
-           OriginalRoute = createThumbnailResponse.OriginalRoute,
-           ThumbnailRoute = createThumbnailResponse.ThumbnailRoute
+           Name = createThumbnailRequest.Name,
+           Description = createThumbnailRequest.Description,
+           Width = createThumbnailRequest.Width,
+           Height = createThumbnailRequest.Height,
+           OriginalRoute = createThumbnailRequest.OriginalRoute,
+           ThumbnailRoute = createThumbnailRequest.ThumbnailRoute
        };
         
        //await Task.Run(() => _db.Thumbnails.Add(thumbnail)); no hace falta que el add sea async
@@ -57,17 +57,17 @@ public class ThumbnailRepository : IThumbnailRepository
    }
 
 
-   public async Task<Thumbnail?> UpdateThumbnail(Guid id, CreateThumbnailResponse createThumbnailResponse)
+   public async Task<Thumbnail?> UpdateThumbnail(Guid id, CreateThumbnailRequest createThumbnailRequest)
    {
        //using var db = new ThumbnailsContext();
        var thumbnail = await GetById(id);
        if (thumbnail is null) return thumbnail;
-       thumbnail.Name = createThumbnailResponse.Name;    
-       thumbnail.Description = createThumbnailResponse.Description;  
-       thumbnail.Width = createThumbnailResponse.Width;
-       thumbnail.Height = createThumbnailResponse.Height;
-       thumbnail.OriginalRoute = createThumbnailResponse.OriginalRoute;
-       thumbnail.ThumbnailRoute = createThumbnailResponse.ThumbnailRoute; 
+       thumbnail.Name = createThumbnailRequest.Name;    
+       thumbnail.Description = createThumbnailRequest.Description;  
+       thumbnail.Width = createThumbnailRequest.Width;
+       thumbnail.Height = createThumbnailRequest.Height;
+       thumbnail.OriginalRoute = createThumbnailRequest.OriginalRoute;
+       thumbnail.ThumbnailRoute = createThumbnailRequest.ThumbnailRoute; 
        await _db.SaveChangesAsync();
        return thumbnail;
    }

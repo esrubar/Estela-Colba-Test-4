@@ -27,35 +27,29 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpPost]
-    public async Task<Thumbnail> Create([FromBody] CreateThumbnailResponse createThumbnailResponse)
+    public async Task<Thumbnail> Create([FromBody] CreateThumbnailRequest createThumbnailRequest)
     {
-        return await _thumbnailRepository.CreateThumbnail(createThumbnailResponse);
-        
+        return await _thumbnailRepository.CreateThumbnail(createThumbnailRequest);
+        // TODO comprobar si es nulo que devuelva 500 y hacer test
     }
     
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<Thumbnail>> GetById([FromRoute] Guid id)
     {
         var thumbnail = await _thumbnailRepository.GetById(id);
-        if (thumbnail is null)
-        {
-            _logger.LogWarning($"Not found {id}");
-            return NotFound();
-        }
+        if (thumbnail is not null) return Ok(thumbnail);
+        _logger.LogWarning($"Not found {id}");
+        return NotFound(id);
         //return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
-        return Ok(thumbnail);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CreateThumbnailResponse createThumbnailResponse)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CreateThumbnailRequest createThumbnailRequest)
     {
-        var thumbnail = await _thumbnailRepository.UpdateThumbnail(id, createThumbnailResponse);
-        if (thumbnail is null)
-        {
-            _logger.LogWarning($"Not found {id}");
-            return NotFound();
-        }
-        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        var thumbnail = await _thumbnailRepository.UpdateThumbnail(id, createThumbnailRequest);
+        if (thumbnail is not null) return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        _logger.LogWarning($"Not found {id}");
+        return NotFound();
     }
 
     [HttpDelete("{id:guid}")]
@@ -63,12 +57,9 @@ public class ThumbnailsController: ControllerBase
     {
         //using var db = new ThumbnailsContext();
         var thumbnail = await _thumbnailRepository.DeleteThumbnail(id);
-        if (thumbnail is null)
-        {
-            _logger.LogWarning($"Not found {id}");
-            return NotFound();
-        }
-        return NoContent();
+        if (thumbnail is not null) return NoContent();
+        _logger.LogWarning($"Not found {id}");
+        return NotFound();
     }
 
     [HttpGet("search")]
@@ -81,12 +72,9 @@ public class ThumbnailsController: ControllerBase
     public async Task<IActionResult> GetMostViewed()
     {
         var thumbnail = await _thumbnailRepository.GetMostViewed();
-        if (thumbnail is null)
-        {
-            _logger.LogWarning($"Could not find the thumbnail with the most views");
-            return NotFound();
-        }
-        return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        if (thumbnail is not null) return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        _logger.LogWarning($"Could not find the thumbnail with the most views");
+        return NotFound();
     }
     
     
