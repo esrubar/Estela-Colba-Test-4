@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using static System.String;
 
 namespace Estela_Colba_Test_4_Tests;
 
@@ -44,8 +45,8 @@ public class ThumbnailsControllerTest
                 "Test Description", 
                 0, 
                 0, 
-                string.Empty, 
-                string.Empty
+                Empty, 
+                Empty
             ), 
             new Thumbnail (
                 Guid.Parse("c50e7596-1e4c-48e8-a85f-a4f9e8c26abf"),
@@ -53,8 +54,8 @@ public class ThumbnailsControllerTest
                 "Test 2 Description", 
                 0, 
                 0, 
-                string.Empty, 
-                string.Empty
+                Empty, 
+                Empty
             )
         };
         _mockRepo.Setup(repo => repo.GetAllAsync()).ReturnsAsync(thumbnails);
@@ -83,11 +84,27 @@ public class ThumbnailsControllerTest
         var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result.Result);
         Assert.Equal(testSessionId, notFoundObjectResult.Value);
     }
+
+    [Fact]
+    public async Task GivenThumbnail_WhenGetThumbnailById_ThenReturnsThumbnail()
+    {
+        //Arrange
+        var id = Guid.Parse("bfa90f61-1611-45e6-a1f9-c99793197567");
+        var thumbnail = new Thumbnail(id, "Test", "Test Description", 0, 0, Empty, Empty);
+        _mockRepo.Setup(repo => repo.GetById(id)).ReturnsAsync(thumbnail);
+        
+        //Act
+        var result = await _controller.GetById(id);
+        
+        //Assert
+        Assert.IsType<OkObjectResult>(result.Result);
+    }
     
+    //CREATE
     [Fact]
     public async Task GivenNoThumbnail_WhenCreateThumbnail_ThenReturnError()
     {
-        // Arrange & Act
+        // Arrange 
         _controller.ModelState.AddModelError("error", "some error");
 
         // Act
@@ -117,4 +134,33 @@ public class ThumbnailsControllerTest
         Assert.IsType<OkObjectResult>(response.Result);
     }
     
+    //UPDATE
+    [Fact]
+    public async Task GivenThumbnail_WhenModifiedAThumbnail_ThenReturnModifiedThumbnail()
+    {
+        //Arrange
+        var id = Guid.Parse("bfa90f61-1611-45e6-a1f9-c99793197567");
+        var newThumbnail = new CreateThumbnailRequest()
+        {
+            Name = "New Test", Description = "Test Description", Width = 0, Height = 0, OriginalRoute = Empty, ThumbnailRoute = Empty
+        };
+        var thumbnail = new Thumbnail(id, newThumbnail.Name, newThumbnail.Description, newThumbnail.Height, newThumbnail.Width,
+            newThumbnail.OriginalRoute, newThumbnail.ThumbnailRoute);
+        _mockRepo.Setup(repo => repo.UpdateThumbnail(id, newThumbnail)).ReturnsAsync(thumbnail);
+
+        //Act
+        var result = await _controller.Update(id, newThumbnail);
+
+        //Assert
+        Assert.IsType<OkObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task GivenThumbnail_WhenModifiedAThumbnail_ThenReturnNotFound()
+    {
+        /*
+        var id = Guid.Parse("bfa90f61-1611-45e6-a1f9-c99793197567");
+        _mockRepo.Setup(repo => repo.UpdateThumbnail(id, newThumbnail)).ReturnsAsync(null);
+        */
+    }
 }

@@ -54,7 +54,7 @@ public class ThumbnailsController: ControllerBase
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CreateThumbnailRequest createThumbnailRequest)
     {
         var thumbnail = await _thumbnailRepository.UpdateThumbnail(id, createThumbnailRequest);
-        if (thumbnail is not null) return new ObjectResult(thumbnail) { StatusCode = StatusCodes.Status200OK };
+        if (thumbnail is not null) return Ok(thumbnail);
         _logger.LogWarning($"Not found {id}");
         return NotFound();
     }
