@@ -20,17 +20,24 @@ public class ThumbnailsController: ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Thumbnail>> GetAll()
+    public async Task<ActionResult<List<Thumbnail>>> GetAll()
     {
         var thumbnails = await _thumbnailRepository.GetAllAsync();
-        return thumbnails;
+        return Ok(thumbnails);
     }
 
     [HttpPost]
-    public async Task<Thumbnail> Create([FromBody] CreateThumbnailRequest createThumbnailRequest)
+    public async Task<ActionResult<Thumbnail>> Create([FromBody] CreateThumbnailRequest? createThumbnailRequest)
     {
-        return await _thumbnailRepository.CreateThumbnail(createThumbnailRequest);
-        // TODO comprobar si es nulo que devuelva 500 y hacer test
+        if (createThumbnailRequest is null)
+        {
+            return BadRequest();
+        }
+        else
+        {
+            var thumbnail = await _thumbnailRepository.CreateThumbnail(createThumbnailRequest);
+            return Ok(thumbnail);
+        }
     }
     
     [HttpGet("{id:guid}")]

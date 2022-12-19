@@ -5,6 +5,21 @@ namespace Estela_Colba_Test_4.Thumbnails.Models;
 
 public class Thumbnail
 {
+    public Thumbnail()
+    {
+        
+    }
+    public Thumbnail(Guid id, string name, string description, double width, double height, string originalRoute,string thumbnailRoute)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        Width = width;
+        Height = height;
+        OriginalRoute = originalRoute;
+        ThumbnailRoute = thumbnailRoute;
+    }
+
     public Guid Id { get; set; }
     
     [Required]

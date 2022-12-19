@@ -22,8 +22,9 @@ public class ThumbnailRepository : IThumbnailRepository
         return await _db.Thumbnails.ToListAsync();
     }
 
-   public async Task<Thumbnail> CreateThumbnail(CreateThumbnailRequest createThumbnailRequest)
+   public async Task<Thumbnail> CreateThumbnail(CreateThumbnailRequest? createThumbnailRequest)
    {
+       if (createThumbnailRequest is null) return null;
        //using var db = new ThumbnailsContext();
        var thumbnail = new Thumbnail
        {
@@ -36,7 +37,6 @@ public class ThumbnailRepository : IThumbnailRepository
            OriginalRoute = createThumbnailRequest.OriginalRoute,
            ThumbnailRoute = createThumbnailRequest.ThumbnailRoute
        };
-        
        //await Task.Run(() => _db.Thumbnails.Add(thumbnail)); no hace falta que el add sea async
        _db.Thumbnails.Add(thumbnail);
        await _db.SaveChangesAsync();

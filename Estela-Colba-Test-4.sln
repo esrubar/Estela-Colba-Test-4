@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estela-Colba-Test-4", "Estela-Colba-Test-4\Estela-Colba-Test-4.csproj", "{E7AC9A7E-62D4-45A4-9EA6-B77FAF663389}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estela-Colba-Test-4-Tests", "Estela-Colba-Test-4-Tests\Estela-Colba-Test-4-Tests.csproj", "{267FB05D-D5CE-4561-B03B-03565550A1DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E7AC9A7E-62D4-45A4-9EA6-B77FAF663389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7AC9A7E-62D4-45A4-9EA6-B77FAF663389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7AC9A7E-62D4-45A4-9EA6-B77FAF663389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{267FB05D-D5CE-4561-B03B-03565550A1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{267FB05D-D5CE-4561-B03B-03565550A1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{267FB05D-D5CE-4561-B03B-03565550A1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{267FB05D-D5CE-4561-B03B-03565550A1DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

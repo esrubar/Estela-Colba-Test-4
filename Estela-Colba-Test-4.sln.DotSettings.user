@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=588d993c_002D5710_002D4b6d_002Db9ed_002D58ccf7d5016b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;Estela-Colba-Test-4-Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenListOfThumbnails_WhenGetAllThumbnails_ThenExistsAnyThumnail&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenCreateThumbnailRequest_WhenCreate_ThenReturnThumbnail&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GinvenNoThumbnail_WhenGetThumbnailById_ThenReturnsNotFound&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenNoThumbnailsInDB_WhenGetAllThumbnails_ThenTheListIsEmpty&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenListOfThumbnails_WhenGetAllThumbnails_ThenReturnBadRequestResult&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenListOfThumbnails_WhenGetAllThumbnails_ThenReturnListOfThumbnails&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::267FB05D-D5CE-4561-B03B-03565550A1DF::net6.0::Estela_Colba_Test_4_Tests.ThumbnailsControllerTest.GivenNoThumbnail_WhenCreateThumbnail_ThenReturnError&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

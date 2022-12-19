@@ -3,7 +3,7 @@ using static System.Double;
 
 namespace Estela_Colba_Test_4.Thumbnails.Models;
 
-public class CreateThumbnailResponse
+public class CreateThumbnailRequest
 {
     [Required]
     [MaxLength(60, ErrorMessage = "No more than 60 characters")]
